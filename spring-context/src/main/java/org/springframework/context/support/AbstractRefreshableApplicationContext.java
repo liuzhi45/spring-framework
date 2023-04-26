@@ -64,9 +64,11 @@ import org.springframework.lang.Nullable;
  */
 public abstract class AbstractRefreshableApplicationContext extends AbstractApplicationContext {
 
+	//是否允许bean 重写
 	@Nullable
 	private Boolean allowBeanDefinitionOverriding;
 
+	//是否允许循环依赖
 	@Nullable
 	private Boolean allowCircularReferences;
 
@@ -119,14 +121,22 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 	 */
 	@Override
 	protected final void refreshBeanFactory() throws BeansException {
+		//如果存在BeanFactory，将原来的销毁
 		if (hasBeanFactory()) {
 			destroyBeans();
 			closeBeanFactory();
 		}
 		try {
+			//创建bean 工厂  DefaultListableBeanFactory
 			DefaultListableBeanFactory beanFactory = createBeanFactory();
+
+			//设置序列化ID 可以从ID反序列化到beanFactory对象
 			beanFactory.setSerializationId(getId());
+
+			//定制beanFactory，设置相关属性，包括是否允许覆盖同名称的不同定义的对象以及循环依赖
 			customizeBeanFactory(beanFactory);
+
+			//初始化 documentReader,并进行XML文件读取解析
 			loadBeanDefinitions(beanFactory);
 			this.beanFactory = beanFactory;
 		}
@@ -212,10 +222,13 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 	 * @see DefaultListableBeanFactory#setAllowEagerClassLoading
 	 */
 	protected void customizeBeanFactory(DefaultListableBeanFactory beanFactory) {
+		//可以重写此方法进行赋值
 		if (this.allowBeanDefinitionOverriding != null) {
+			//父类默认为true
 			beanFactory.setAllowBeanDefinitionOverriding(this.allowBeanDefinitionOverriding);
 		}
 		if (this.allowCircularReferences != null) {
+			//父类默认为true
 			beanFactory.setAllowCircularReferences(this.allowCircularReferences);
 		}
 	}

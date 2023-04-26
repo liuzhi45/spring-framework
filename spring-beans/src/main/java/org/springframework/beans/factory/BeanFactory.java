@@ -114,6 +114,55 @@ import org.springframework.lang.Nullable;
  * @see DisposableBean#destroy
  * @see org.springframework.beans.factory.support.RootBeanDefinition#getDestroyMethodName
  */
+
+/**
+ *
+ public interface BeanFactory
+ org.springframework.beans.factory
+ 用于访问 Spring bean 容器的根接口。
+ 这是 bean 容器的基本客户端视图；进一步的接口，如ListableBeanFactory和org.springframework.beans.factory.config.ConfigurableBeanFactory可用于特定目的。
+ 该接口由包含多个 bean 定义的对象实现，每个 bean 定义由一个字符串名称唯一标识。根据 bean 定义，工厂将返回包含对象的独立实例（原型设计模式）或单个共享实例（Singleton 设计模式的高级替代方案，其中实例是范围内的单例厂）。将返回哪种类型的实例取决于 bean 工厂配置：API 是相同的。从 Spring 2.0 开始，根据具体的应用程序上下文（例如 Web 环境中的“请求”和“会话”范围），可以使用更多范围。
+ 这种方法的要点是 BeanFactory 是应用程序组件的中央注册表，并且集中了应用程序组件的配置（例如，单个对象不再需要读取属性文件）。请参阅“专家一对一 J2EE 设计和开发”的第 4 章和第 11 章，了解有关这种方法的好处的讨论。
+ 请注意，通常最好依靠依赖注入（“推送”配置）通过设置器或构造函数配置应用程序对象，而不是使用任何形式的“拉”配置，如 BeanFactory 查找。 Spring 的依赖注入功能是使用这个 BeanFactory 接口及其子接口实现的。
+ 通常 BeanFactory 将加载存储在配置源（例如 XML 文档）中的 bean 定义，并使用org.springframework.beans包来配置 beans。但是，实现可以简单地返回它根据需要直接在 Java 代码中创建的 Java 对象。对于如何存储定义没有任何限制：LDAP、RDBMS、XML、属性文件等。鼓励实现支持 bean 之间的引用（依赖注入）。
+ 与ListableBeanFactory中的方法相反，此接口中的所有操作还将检查父工厂是否为HierarchicalBeanFactory 。如果在此工厂实例中未找到 bean，将询问直接父工厂。这个工厂实例中的 beans 应该覆盖任何父工厂中的同名 beans。
+ Bean 工厂实现应尽可能支持标准的 bean 生命周期接口。全套初始化方法及其标准顺序是：
+ BeanNameAware 的setBeanName
+ BeanClassLoaderAware 的setBeanClassLoader
+ BeanFactoryAware 的setBeanFactory
+ EnvironmentAware 的setEnvironment
+ EmbeddedValueResolverAware 的setEmbeddedValueResolver
+ ResourceLoaderAware 的setResourceLoader （仅在应用程序上下文中运行时适用）
+ ApplicationEventPublisherAware 的setApplicationEventPublisher （仅在应用程序上下文中运行时适用）
+ MessageSourceAware 的setMessageSource （仅在应用程序上下文中运行时适用）
+ ApplicationContextAware 的setApplicationContext （仅在应用程序上下文中运行时适用）
+ ServletContextAware 的setServletContext （仅在 Web 应用程序上下文中运行时适用）
+ BeanPostProcessors 的postProcessBeforeInitialization方法
+ InitializingBean 的afterPropertiesSet
+ 自定义初始化方法定义
+ BeanPostProcessors 的postProcessAfterInitialization方法
+ 在关闭 bean 工厂时，将应用以下生命周期方法：
+ DestructionAwareBeanPostProcessors 的postProcessBeforeDestruction方法
+ DisposableBean 的destroy
+ 自定义销毁方法定义
+ 自:
+ 2001 年 4 月 13 日
+ 请参阅：
+ BeanNameAware.setBeanName ,
+ BeanClassLoaderAware.setBeanClassLoader ,
+ BeanFactoryAware.setBeanFactory ,
+ org.springframework.context.ResourceLoaderAware.setResourceLoader ,
+ org.springframework.context.ApplicationEventPublisherAware.setApplicationEventPublisher ,
+ org.springframework.context.MessageSourceAware.setMessageSource ,
+ org.springframework.context.ApplicationContextAware.setApplicationContext ,
+ org.springframework.web.context.ServletContextAware.setServletContext ,
+ org.springframework.beans.factory.config.BeanPostProcessor.postProcessBeforeInitialization ,
+ InitializingBean.afterPropertiesSet ,
+ org.springframework.beans.factory.support.RootBeanDefinition.getInitMethodName ,
+ org.springframework.beans.factory.config.BeanPostProcessor.postProcessAfterInitialization ,
+ DisposableBean.destroy ,
+ org.springframework.beans.factory.support.RootBeanDefinition.getDestroyMethodName
+ */
 public interface BeanFactory {
 
 	/**

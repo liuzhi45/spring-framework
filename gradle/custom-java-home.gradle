@@ -39,6 +39,7 @@ if (customJavaHome) {
 	tasks.withType(JavaCompile) {
 		logger.info("Java home for " + it.name + " task in " + project.name + ": " + customJavaHomeDir)
 		options.forkOptions.javaHome = customJavaHomeDir
+		options.encoding = "UTF-8"
 		inputs.property("customJavaHome", customJavaHome)
 		if (customJavaSourceVersion) {
 			options.compilerArgs += [ "--release", customJavaSourceVersion]
@@ -49,6 +50,7 @@ if (customJavaHome) {
 	tasks.withType(GroovyCompile) {
 		logger.info("Java home for " + it.name + " task in " + project.name + ": " + customJavaHomeDir)
 		options.forkOptions.javaHome = customJavaHomeDir
+		options.encoding = "UTF-8"
 		inputs.property("customJavaHome", customJavaHome)
 		if (customJavaSourceVersion) {
 			options.compilerArgs += [ "--release", customJavaSourceVersion]

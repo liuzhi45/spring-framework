@@ -62,3 +62,11 @@ void configureDeploymentRepository(Project project) {
 		}
 	}
 }
+
+tasks.withType(JavaCompile) {
+	options.encoding = "UTF-8"
+}
+
+tasks.withType(GroovyCompile) {
+	options.encoding = "UTF-8"
+}
